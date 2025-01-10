@@ -33,30 +33,38 @@ public class VideoManipulationService {
 
         String mp4Path = STORAGE_DIR + File.separator + upload.getOriginalFilename();
         String imagePath = STORAGE_DIR;
-        convertMovietoJPG(mp4Path, imagePath,"jpg",0);
+        convertMovietoJPG(mp4Path, imagePath);
         log.info("Conversion complete. Please find the images at " + imagePath);
 
     }
-    public static void convertMovietoJPG(String mp4Path, String imagePath, String imgType, int frameJump) throws Exception {
+    public static void convertMovietoJPG(String mp4Path, String imagePath) throws Exception {
         Java2DFrameConverter converter = new Java2DFrameConverter();
         FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(mp4Path);
+
         frameGrabber.start();
         Frame frame;
-        double frameRate=frameGrabber.getFrameRate();
-        int imgNum=0;
+        String imgType = "jpg";
+
+        double frameRate = frameGrabber.getFrameRate();
         log.info("Video has " + frameGrabber.getLengthInFrames() + " frames and has frame rate of " + frameRate);
 
         try {
-            for(int i=1;i<=frameGrabber.getLengthInFrames();i++) {
-                imgNum++;
-                frameGrabber.setFrameNumber(i);
-                frame = frameGrabber.grabFrame();
+            for(int currentTime=0;currentTime<=frameGrabber.getLengthInFrames();currentTime+=20) {
+                frameGrabber.setFrameNumber(currentTime * (int) frameRate);
+                frame = frameGrabber.grabFrame(false, true, true, false);
+
+                if (frame == null)
+                    return;
+                if (!frame.type.equals(Frame.Type.VIDEO))
+                    continue;
+
                 BufferedImage bi = converter.convert(frame);
-                String path = imagePath + File.separator + imgNum + ".jpg";
+                String path = imagePath + File.separator + "frame_at" + currentTime + "." + imgType ;
                 ImageIO.write(bi, imgType, new File(path));
-                i+=frameJump;
             }
+
             frameGrabber.stop();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
