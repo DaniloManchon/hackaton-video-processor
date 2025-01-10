@@ -21,8 +21,7 @@ public class Controller {
     FileStorageService fileStorageService;
 
     @PostMapping("/upload")
-    public boolean uploadFile(@RequestParam(value="file") MultipartFile file) throws IOException {
-//        videoManipulationService.convertVideoToImages(file);
+    public boolean uploadFile(@RequestParam(value="file") MultipartFile file) throws Exception {
         fileStorageService.saveFile(file);
         videoManipulationService.convertVideoToImages(file);
         return true;
