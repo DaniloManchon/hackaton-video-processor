@@ -1,5 +1,6 @@
 package com.fiap.video_processor.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
@@ -14,10 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-
+@Log4j2
 @Service
 public class VideoManipulationService {
 
@@ -29,31 +31,30 @@ public class VideoManipulationService {
 
     public void convertVideoToImages(MultipartFile upload) throws Exception {
 
-        String mp4Path=STORAGE_DIR+upload.getOriginalFilename();
-        String imagePath=STORAGE_DIR;
+        String mp4Path = STORAGE_DIR + File.separator + upload.getOriginalFilename();
+        String imagePath = STORAGE_DIR;
         convertMovietoJPG(mp4Path, imagePath,"jpg",0);
-        System.out.println("Conversion complete. Please find the images at "+imagePath);
+        log.info("Conversion complete. Please find the images at " + imagePath);
 
     }
-    public static void convertMovietoJPG(String mp4Path, String imagePath, String imgType, int frameJump) throws Exception, IOException
-    {
+    public static void convertMovietoJPG(String mp4Path, String imagePath, String imgType, int frameJump) throws Exception {
         Java2DFrameConverter converter = new Java2DFrameConverter();
         FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(mp4Path);
         frameGrabber.start();
         Frame frame;
         double frameRate=frameGrabber.getFrameRate();
         int imgNum=0;
-        System.out.println("Video has "+frameGrabber.getLengthInFrames()+" frames and has frame rate of "+frameRate);
+        log.info("Video has " + frameGrabber.getLengthInFrames() + " frames and has frame rate of " + frameRate);
 
         try {
-            for(int ii=1;ii<=frameGrabber.getLengthInFrames();ii++){
+            for(int i=1;i<=frameGrabber.getLengthInFrames();i++) {
                 imgNum++;
-                frameGrabber.setFrameNumber(ii);
-                frame = frameGrabber.grab();
-                BufferedImage  bi = converter.convert(frame);
-                String path = imagePath+File.separator+imgNum+".jpg";
-                ImageIO.write(bi,imgType, new File(path));
-                ii+=frameJump;
+                frameGrabber.setFrameNumber(i);
+                frame = frameGrabber.grabFrame();
+                BufferedImage bi = converter.convert(frame);
+                String path = imagePath + File.separator + imgNum + ".jpg";
+                ImageIO.write(bi, imgType, new File(path));
+                i+=frameJump;
             }
             frameGrabber.stop();
         } catch (Exception e) {
