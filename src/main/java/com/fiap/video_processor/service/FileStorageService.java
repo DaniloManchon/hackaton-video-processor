@@ -18,7 +18,7 @@ public class FileStorageService {
         if (file == null) {
             throw new NullPointerException("file is null");
         }
-        FileOutputStream fileOutputStream = new FileOutputStream( STORAGE_DIR + File.separator + file.getOriginalFilename());
+        FileOutputStream fileOutputStream = new FileOutputStream(STORAGE_DIR + File.separator + file.getOriginalFilename());
         fileOutputStream.write(file.getBytes());
         fileOutputStream.close();
 
