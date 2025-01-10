@@ -30,16 +30,10 @@ public class VideoManipulationService {
     private String STORAGE_DIR;
 
     public void convertVideoToImages(MultipartFile upload) throws Exception {
-
-        String mp4Path = STORAGE_DIR + File.separator + upload.getOriginalFilename();
         String imagePath = STORAGE_DIR;
-        convertMovietoJPG(mp4Path, imagePath);
-        log.info("Conversion complete. Please find the images at " + imagePath);
 
-    }
-    public static void convertMovietoJPG(String mp4Path, String imagePath) throws Exception {
         Java2DFrameConverter converter = new Java2DFrameConverter();
-        FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(mp4Path);
+        FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(upload.getInputStream());
 
         frameGrabber.start();
         Frame frame;
@@ -64,6 +58,7 @@ public class VideoManipulationService {
             }
 
             frameGrabber.stop();
+            log.info("Conversion complete. Please find the images at " + imagePath);
 
         } catch (Exception e) {
             e.printStackTrace();
