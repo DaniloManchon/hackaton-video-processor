@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -37,18 +38,16 @@ public class VideoManipulationService {
         log.info("Video has {} frames and has frame rate of {}", frameGrabber.getLengthInFrames(), frameRate);
 
         try {
-            for(int currentTime=0;currentTime<=frameGrabber.getLengthInFrames();currentTime+=20) {
+            for (int currentTime = 0; currentTime <= frameGrabber.getLengthInFrames(); currentTime += 20) {
                 frameGrabber.setFrameNumber(currentTime * (int) frameRate);
                 frame = frameGrabber.grabFrame(false, true, true, false);
 
                 if (frame == null)
                     return;
-                if (!frame.type.equals(Frame.Type.VIDEO))
-                    continue;
 
-                BufferedImage bi = converter.convert(frame);
+                BufferedImage bufferedImage = converter.convert(frame);
                 String path = imagePath + File.separator + "frame_at" + currentTime + "." + imgType;
-                ImageIO.write(bi, imgType, new File(path));
+                ImageIO.write(bufferedImage, imgType, new File(path));
             }
 
             frameGrabber.stop();
