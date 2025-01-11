@@ -12,22 +12,10 @@
 	<artifactId>video-processor</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>video-processor</name>
-	<description>Demo project for Spring Boot</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+	<description>Hackaton Video Processing API</description>
 	<properties>
 		<java.version>21</java.version>
+		<javacv.version>1.5.11</javacv.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -47,15 +35,16 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Video Processing dependecies -->
 		<dependency>
 			<groupId>org.bytedeco</groupId>
 			<artifactId>javacv</artifactId>
-			<version>1.5.11</version>
+			<version>${javacv.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bytedeco</groupId>
 			<artifactId>javacv-platform</artifactId>
-			<version>1.5.11</version>
+			<version>${javacv.version}</version>
 		</dependency>
 	</dependencies>
 
