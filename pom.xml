@@ -35,6 +35,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.zeroturnaround</groupId>
+			<artifactId>zt-zip</artifactId>
+			<version>1.17</version>
+			<type>jar</type>
+		</dependency>
+
 		<!-- Video Processing dependecies -->
 		<dependency>
 			<groupId>org.bytedeco</groupId>

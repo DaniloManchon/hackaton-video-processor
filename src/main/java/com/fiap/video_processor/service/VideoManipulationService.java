@@ -21,12 +21,10 @@ public class VideoManipulationService {
     @Autowired
     FileStorageService fileStorageService;
 
-    @Value("${path.storage}")
-    private String STORAGE_DIR;
-
     public void convertVideoToImages(MultipartFile upload) throws IOException {
-        String imagePath = STORAGE_DIR;
-        String imgType = "jpg";
+        String videoName = upload.getOriginalFilename().replace(" ","_");
+
+        String imageType = "jpg";
 
         Java2DFrameConverter converter = new Java2DFrameConverter();
         FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(upload.getInputStream());
@@ -37,21 +35,28 @@ public class VideoManipulationService {
         double frameRate = frameGrabber.getFrameRate();
         log.info("Video has {} frames and has frame rate of {}", frameGrabber.getLengthInFrames(), frameRate);
 
+        fileStorageService.createDirectory(videoName);
+
         try {
             for (int currentTime = 0; currentTime <= frameGrabber.getLengthInFrames(); currentTime += 20) {
                 frameGrabber.setFrameNumber(currentTime * (int) frameRate);
                 frame = frameGrabber.grabFrame(false, true, true, false);
 
                 if (frame == null)
-                    return;
+                    continue;
 
                 BufferedImage bufferedImage = converter.convert(frame);
-                String path = imagePath + File.separator + "frame_at" + currentTime + "." + imgType;
-                ImageIO.write(bufferedImage, imgType, new File(path));
-            }
+                String imageName = "frame_at" + currentTime + "." + imageType;
+                fileStorageService.saveFileInDirectory(videoName, imageName, bufferedImage, imageType);
 
+            }
             frameGrabber.stop();
-            log.info("Conversion complete. Please find the images at {}", imagePath);
+            log.info("Conversion complete");
+
+            fileStorageService.zipDirectory(videoName);
+
+            log.info("Deleting old directory");
+            fileStorageService.deleteDirectory(videoName);
 
         } catch (Exception e) {
             log.error(e);
