@@ -5,13 +5,10 @@ import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 @Log4j2
@@ -22,7 +19,7 @@ public class VideoManipulationService {
     FileStorageService fileStorageService;
 
     public void convertVideoToImages(MultipartFile upload) throws IOException {
-        String videoName = upload.getOriginalFilename().replace(" ","_");
+        String videoName = upload.getOriginalFilename().replace(" ", "_");
 
         String imageType = "jpg";
 
