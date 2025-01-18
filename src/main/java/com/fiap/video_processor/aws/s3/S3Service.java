@@ -11,5 +11,6 @@ public class S3Service {
         this.s3Client = s3Client;
         this.awsProperties = awsProperties;
     }
- //https://medium.com/codex/aws-s3-in-spring-boot-ca4b173e9cb1
+
 }
+//https://medium.com/codex/aws-s3-in-spring-boot-ca4b173e9cb1
