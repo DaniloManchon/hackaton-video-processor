@@ -1,4 +1,4 @@
-package com.fiap.video_processor.sqs;
+package com.fiap.video_processor.aws.sqs;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

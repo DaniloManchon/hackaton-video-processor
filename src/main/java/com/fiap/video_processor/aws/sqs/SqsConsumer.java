@@ -1,4 +1,4 @@
-package com.fiap.video_processor.sqs;
+package com.fiap.video_processor.aws.sqs;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
